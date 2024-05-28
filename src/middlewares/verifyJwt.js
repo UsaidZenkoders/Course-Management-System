@@ -10,7 +10,7 @@ const verifyJwt = (req, res, next) => {
     });
   };
   const checkAdmin = (req, res, next) => {
-    if (req.user && req.user.is_Admin) {
+    if (req.user && req.user.role==='admin') {
       return next();
     }
     res.status(403).json({ message: 'Admin access required' });
