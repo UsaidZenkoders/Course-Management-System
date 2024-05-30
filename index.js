@@ -9,7 +9,7 @@ const EnrolmentRouter = require("./src/routes/Enrolments.router");
 const { db } = require("./src/utils/connectToDb");
 const CourseRouter = require("./src/routes/Course.router");
 dotenv.config();
-const PORT = 3000;
+const PORT = 3100;
 
 app.use(cors());
 app.use(express.json());

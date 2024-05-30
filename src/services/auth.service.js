@@ -5,8 +5,8 @@ const { generateToken } = require("../middlewares/generateToken");
 
 const RegisterUser = async (req, res) => {
   const { email, password, name, role } = req.body;
-  const tableName = role==='Admin' ? "teachers" : "students";
-  if (!email || !password || !name) {
+  const tableName = role==='admin' ? "teachers" : "students";
+  if (!email || !password || !name || !role) {
     return {
       statusCode: 401,
       data: { message: "fields are required" },
@@ -19,7 +19,7 @@ const RegisterUser = async (req, res) => {
     return { statusCode: 401, data: { message: "User already exists" } };
   } else {
     const accessToken = generateToken({ email,role });
-    let query = `INSERT INTO ${tableName} (name,email,password) values ('${name}','${email}','${hashedPassword}')`;
+    let query = `INSERT INTO ${tableName} (email,password,role,name) values ('${email}','${hashedPassword}','${role}','${name}')`;
     let result = await executeQuery(query);
     const InsertedUser = {
       name: name,
@@ -64,5 +64,6 @@ const LoginUser = async (req, res) => {
     };
   }
 };
+
 
 module.exports = { RegisterUser, LoginUser };
