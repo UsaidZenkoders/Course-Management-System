@@ -33,13 +33,13 @@ const RegisterUser = async (req, res) => {
 
 const LoginUser = async (req, res) => {
   const { email, password,role} = req.body;
-  if (!email || !password) {
+  if (!email || !password || !role) {
     return {
       statusCode: 401,
       data: { message: "email and password are required" },
     };
   }
-  const tableName = role ? "teachers" : "students";
+  const tableName = role==="admin" ? "teachers" : "students";
   let getHashedPass = `SELECT password as hashedPassword from ${tableName} where email='${email}'`;
   const DbFetchedPass = await executeQuery(getHashedPass);
   if (DbFetchedPass.length === 1) {
