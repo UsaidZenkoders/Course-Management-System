@@ -1,10 +1,12 @@
 const { executeQuery } = require("../utils/executeQuery");
 const getAllStudents=async(req,res)=>{
-  let query=`SELECT name as Student_Name , email as Student_Email FROM STUDENTS`
+  let query = `SELECT students.name, students.email, enrolments.course_code 
+  FROM students 
+  LEFT JOIN  enrolments ON students.email = enrolments.email`;
   const result=await executeQuery(query)
   return {
-    statusCode:201,
-    data:{students:result}
+    statusCode:200,
+    data:result
   }
 }
 

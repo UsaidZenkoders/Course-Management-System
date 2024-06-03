@@ -5,7 +5,7 @@ const { generateToken } = require("../middlewares/generateToken");
 
 const RegisterUser = async (req, res) => {
   const { email, password, name, role } = req.body;
-  const tableName = role==='admin' ? "teachers" : "students";
+  const tableName = role === "admin" ? "teachers" : "students";
   if (!email || !password || !name || !role) {
     return {
       statusCode: 401,
@@ -18,7 +18,7 @@ const RegisterUser = async (req, res) => {
   if (alreadyExist.length >= 1) {
     return { statusCode: 401, data: { message: "User already exists" } };
   } else {
-    const accessToken = generateToken({ email,role });
+    const accessToken = generateToken({ email, role });
     let query = `INSERT INTO ${tableName} (email,password,role,name) values ('${email}','${hashedPassword}','${role}','${name}')`;
     let result = await executeQuery(query);
     const InsertedUser = {
@@ -32,14 +32,14 @@ const RegisterUser = async (req, res) => {
 };
 
 const LoginUser = async (req, res) => {
-  const { email, password,role} = req.body;
+  const { email, password, role } = req.body;
   if (!email || !password || !role) {
     return {
       statusCode: 401,
       data: { message: "email and password are required" },
     };
   }
-  const tableName = role==="admin" ? "teachers" : "students";
+  const tableName = role === "admin" ? "teachers" : "students";
   let getHashedPass = `SELECT password as hashedPassword from ${tableName} where email='${email}'`;
   const DbFetchedPass = await executeQuery(getHashedPass);
   if (DbFetchedPass.length === 1) {
@@ -47,7 +47,7 @@ const LoginUser = async (req, res) => {
     let registeredUser = `SELECT COUNT(*) AS user_in_db FROM ${tableName} WHERE email= '${email}' AND password ='${hashedPassword}'`;
     const UserExist = await executeQuery(registeredUser);
     if (UserExist[0].user_in_db === 1) {
-      const accessToken = generateToken({ email ,role});
+      const accessToken = generateToken({ email, role });
       return {
         statusCode: 200,
         data: { message: "User logged in successfully", accessToken },
@@ -59,11 +59,10 @@ const LoginUser = async (req, res) => {
     return {
       statusCode: 401,
       data: {
-        message: "No hashed Password exist",
+        message: "Incorrect credentials",
       },
     };
   }
 };
-
 
 module.exports = { RegisterUser, LoginUser };
